@@ -1,0 +1,13 @@
+EXPERIMENT 7: SCADA / PLC - HMI Interfacing
+===========================================
+PROGRAM: No program code in this PDF (PLC/HMI configuration done in the
+manufacturer's software).
+
+Logic described in the PDF:
+ - Start command energizes the output (motor/pump).
+ - Stop command de-energizes the output.
+ - Motor status on HMI must come from PLC feedback / actual output,
+   not just a copy of the HMI command.
+
+Sample tags (illustrative): Start, Stop, Motor status, Motor output,
+Process value, Communication status.

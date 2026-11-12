@@ -1,0 +1,47 @@
+EXPERIMENT 2: Spring Mass Damper System (MATLAB)
+Save as: MSD_System.m
+=================================================
+
+% Mass-Spring-Damper System Simulation
+clc;
+clear;
+close all;
+
+% System Parameters
+m = 1;    % Mass (kg)
+c = 2;    % Damping coefficient (Ns/m)
+k = 20;   % Spring stiffness (N/m)
+
+% Transfer Function
+num = [1];
+den = [m c k];
+
+sys = tf(num, den);
+
+disp('Transfer Function:');
+sys
+
+% Step Response
+figure;
+step(sys);
+grid on;
+title('Step Response of Mass-Spring-Damper System');
+
+% Performance Parameters
+info = stepinfo(sys);
+disp(info);
+
+% Effect of Different Damping Values
+figure;
+hold on;
+
+c_values = [0.5 2 8];
+
+for c = c_values
+    sys = tf([1],[m c k]);
+    step(sys);
+end
+
+legend('c=0.5','c=2','c=8');
+title('Effect of Damping Coefficient');
+grid on;

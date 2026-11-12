@@ -1,0 +1,41 @@
+EXPERIMENT 3: PID Controller - MATLAB / Simulink
+Save as: PID_Controller_Experiment.m
+=================================================
+
+% PID Controller Tuning and Response Analysis
+clc;
+clear;
+close all;
+
+s = tf('s');
+
+% Plant Transfer Function
+G = 1/(s^2 + 10*s + 20);
+
+% PID Parameters
+Kp = 30;
+Ki = 70;
+Kd = 2;
+
+C = pid(Kp,Ki,Kd);
+
+% Closed Loop System
+T = feedback(C*G,1);
+
+% Step Response
+figure;
+step(T);
+grid on;
+title('PID Controlled System Response');
+
+% Performance Analysis
+info = stepinfo(T)
+
+disp('Rise Time = ');
+disp(info.RiseTime);
+
+disp('Settling Time = ');
+disp(info.SettlingTime);
+
+disp('Overshoot = ');
+disp(info.Overshoot);

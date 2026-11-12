@@ -1,0 +1,12 @@
+EXPERIMENT 4: Real-Time Temperature Control using PID (PID Trainer Kit)
+=======================================================================
+PROGRAM: No program code in this PDF (hardware trainer kit with software).
+
+PID controller mode settings given in the PDF:
+ a) On-Off control      P = I = D = 0
+ b) Proportional        P = xxx (0-200%)   I = D = 0
+ c) PI control          P = M   I = xxx (0-3600 s)   D = 0
+ d) PD control          P = M   D = xxx (0-900 s)    I = 0
+ e) PID control         P = I = D = xxx
+ f) PID control (tuned) P = I = D = M
+ (M = moderate constants, i.e. P = 30, I = 6, D = 2)

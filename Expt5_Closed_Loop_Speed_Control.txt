@@ -1,0 +1,152 @@
+EXPERIMENT 5: Closed Loop Speed Control of DC Motor
+Arduino program (NOT MATLAB) - libraries: Encoder.h, PID_v1.h
+=====================================================
+
+#include <Encoder.h>
+#include <PID_v1.h>
+
+// =====================================================
+// CLOSED LOOP SPEED CONTROL OF DC MOTOR
+// Arduino UNO + Encoder + L298N + PID Controller
+// =====================================================
+
+// ---------------- Encoder Pins ----------------
+const int encA = 2;
+const int encB = 3;
+
+// ---------------- L298N Motor Driver Pins ----------------
+const int pwmPin = 9;   // ENA - PWM
+const int in1 = 8;      // IN1
+const int in2 = 7;      // IN2
+
+// ---------------- Encoder Specification ----------------
+// Change this value according to your encoder.
+//
+// If the encoder is rated as 100 PPR per channel and
+// the Encoder library counts all quadrature transitions,
+// use 400 counts/revolution.
+//
+// If your encoder specification directly gives 100 counts
+// per revolution as counted by the Arduino, use 100.
+const double COUNTS_PER_REV = 400.0;
+
+// ---------------- PID Variables ----------------
+double Setpoint = 100.0;  // Desired speed in RPM
+double Input = 0.0;       // Actual motor speed in RPM
+double Output = 0.0;      // PWM output
+
+// PID gains
+double Kp = 1.0;
+double Ki = 0.5;
+double Kd = 0.1;
+
+// Create PID controller
+PID myPID(&Input, &Output, &Setpoint,
+          Kp, Ki, Kd, DIRECT);
+
+// Create encoder object
+Encoder myEnc(encA, encB);
+
+// ---------------- Timing ----------------
+unsigned long lastTime = 0;
+const unsigned long sampleTime = 100;  // 100 ms
+
+// =====================================================
+// SETUP
+// =====================================================
+void setup()
+{
+  Serial.begin(9600);
+
+  // Motor driver pins
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(pwmPin, OUTPUT);
+
+  // Motor direction - Forward
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+
+  // Set PID limits
+  myPID.SetOutputLimits(0, 255);
+
+  // PID sample time
+  myPID.SetSampleTime(sampleTime);
+
+  // Start PID controller
+  myPID.SetMode(AUTOMATIC);
+
+  // Reset encoder count
+  myEnc.write(0);
+
+  lastTime = millis();
+
+  Serial.println("Closed Loop DC Motor Speed Control");
+  Serial.println("-----------------------------------");
+  Serial.println("Setpoint(RPM)  Actual(RPM)  PWM");
+}
+
+// =====================================================
+// MAIN LOOP
+// =====================================================
+void loop()
+{
+  unsigned long now = millis();
+
+  // Execute speed calculation and PID control
+  // every 100 ms
+  if (now - lastTime >= sampleTime)
+  {
+    // Calculate actual elapsed time
+    double elapsedTime = now - lastTime;
+
+    lastTime = now;
+
+    // Read encoder count accumulated during
+    // the previous sampling period
+    long counts = myEnc.read();
+
+    // Reset encoder count for the next sampling period
+    myEnc.write(0);
+
+    // -------------------------------------------------
+    // Calculate Motor Speed in RPM
+    // -------------------------------------------------
+    //
+    // RPM = Counts x 60000
+    //       -----------------------------
+    //       Counts/Rev x Time(ms)
+    //
+    Input = (abs(counts) * 60000.0) /
+            (COUNTS_PER_REV * elapsedTime);
+
+    // -------------------------------------------------
+    // PID Calculation
+    // -------------------------------------------------
+    myPID.Compute();
+
+    // -------------------------------------------------
+    // Motor Direction and PWM Control
+    // -------------------------------------------------
+
+    // Forward rotation
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+
+    // Apply PID output as PWM
+    analogWrite(pwmPin,
+                constrain((int)Output, 0, 255));
+
+    // -------------------------------------------------
+    // Display Results on Serial Monitor
+    // -------------------------------------------------
+    Serial.print("Setpoint: ");
+    Serial.print(Setpoint);
+
+    Serial.print(" RPM, Actual: ");
+    Serial.print(Input);
+
+    Serial.print(" RPM, PWM: ");
+    Serial.println(Output);
+  }
+}

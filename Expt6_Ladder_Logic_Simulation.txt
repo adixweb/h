@@ -1,0 +1,39 @@
+EXPERIMENT 6: PLC Ladder Logic Simulation (IITB Virtual Lab)
+Text ladder diagrams given in the PDF (no MATLAB/C code)
+=============================================================
+
+1. AND (series contacts)
+---| |-------| |--------------( )---
+ Input A   Input B           Output
+
+2. OR (parallel contacts)
++---| |---+------------------( )---
+|  Input A |                  Output
++---| |---+
+   Input B
+
+3. NOT (normally closed contact)
+---| / |----------------------( )---
+   Input A                    Output
+
+4. NAND (parallel NC contacts)
++---| / |---+------------------( )---
+|   Input A |                  Output
++---| / |---+
+    Input B
+
+5. NOR (series NC contacts)
+---| / |-------| / |--------------( )---
+   Input A       Input B           Output
+
+6. XOR
++---| |-------| / |---+--------( )---
+|  Input A    Input B  |         Output
++---| / |-------| |---+
+   Input A    Input B
+
+7. XNOR
++---| |-------| |---+--------( )---
+|  Input A    Input B |         Output
++---| / |-------| / |---+
+   Input A    Input B

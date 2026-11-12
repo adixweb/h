@@ -1,0 +1,11 @@
+EXPERIMENT 1: Interfacing of Sensor and Actuator - Bottle Filling Plant (Relay System)
+=======================================================================================
+PROGRAM: No program code in this PDF (relay-based / PLC timer demonstration).
+
+Process sequence given in the PDF:
+1. Place the bottle on conveyor.
+2. Start the motor.
+3. When proximity sensor senses the bottle, stop the motor.
+4. Start the pump and fill the bottle till limit switch output is ON.
+5. Stop the pump and start the motor.
+6. Collect the bottle when it reaches the end.
